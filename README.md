@@ -27,7 +27,7 @@
 - フレッセイネットスーパーの会員登録
 - ブラウザを操作できる AI のどれか
   - Claude: Claude in Chrome（Chrome 拡張・有料プラン）、Claude デスクトップの Cowork、Claude Code のいずれか
-  - ChatGPT: ブラウザで操作できるモード（ChatGPT デスクトップアプリ）。skill として入れられるのは Business / Enterprise / Edu などのプランです
+  - ChatGPT: ブラウザで操作できるモード（ChatGPT デスクトップアプリ）。skill を入れるには、サイドバーの「プラグイン」に「スキル」のタブが出るプランが要ります（Plus で出ることを 2026-11-04 に確認。ほかのプランは未確認）
 
 ## 入れ方
 
@@ -43,18 +43,18 @@
 
 **Claude**
 
-1. claude.ai で、Settings > Capabilities の「コード実行」を有効にする（skill を使う前提）
-2. Customize > Skills を開き、「+」→「+ Create skill」→「Upload a skill」で ZIP を選ぶ
+1. claude.ai の設定 >「機能」で、「クラウドでコードを実行」を有効にする（skill を使う前提）
+2. 設定 >「カスタマイズ」>「Skills」を開き、右上の「追加」→「Skills をアップロード」で ZIP を選ぶ（名前は日本語表示で 2026-11-04 に画面を確認。ZIP のアップロード自体は試していません）
 3. Chrome 拡張（Claude in Chrome）・Cowork・Claude Code から使えるようになります
 
 Claude Code だけで使う場合は、`skills/fressay-netsuper-cart` フォルダを Claude Code の skill フォルダ（例: `~/.claude/skills/`）に置いても使えます。
 
-**ChatGPT（Business / Enterprise / Edu など skill が使えるプラン）**
+**ChatGPT（「スキル」のタブが出るプラン）**
 
-1. サイドバーの Plugins を開き、Skills タブ →「Create」→「Upload from your computer」で ZIP を選ぶ
+1. サイドバーの「プラグイン」を開き、「スキル」タブ →「追加」→「コンピューターからアップロード」で ZIP を選ぶ（名前は日本語表示の Plus プランで 2026-11-04 に画面を確認。ZIP のアップロード自体は試していません）
 2. アップロード後に ChatGPT 側で内容の検査があります
 
-**ChatGPT（上記以外のプラン）**
+**ChatGPT（「スキル」のタブが出ないプラン）**
 
 skill としては入れられません。`SKILL.md` の本文をコピーして、ブラウザで操作できるモードの ChatGPT に貼り付けてから、買い物リストを伝えてください。**この使い方は、まだ試していません。**
 
