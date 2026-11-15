@@ -29,20 +29,19 @@ fresh public clone でも有効な内容に保つこと。 -->
 | 種類 | 内容 |
 |---|---|
 | 成果物 | Markdown（Agent Skills 形式の `SKILL.md`） |
-| 検査 | Node.js で動く `scripts/secrets-scan.mjs` / `scripts/check-claude-md.mjs` |
+| 検査 | `scripts/check-claude-md.mjs`（CLAUDE.md の構造検査）。秘密・個人情報の検査は doxguard と gitleaks（CI） |
 
 ## ディレクトリ構成
 
 - `skills/fressay-netsuper-cart/SKILL.md` — skill 本体（このフォルダを ZIP にして配る）
 - `README.md` — 利用者向けの説明と入れ方
-- `scripts/` — 検査スクリプトと hook の導入スクリプト
-- `.githooks/` — pre-commit（secrets-scan と CLAUDE.md の検査）
+- `scripts/` — 検査スクリプト（CI の doxguard 実行ラッパーを含む）
+- `.githooks/` — pre-commit（CLAUDE.md の検査。秘密の検査は封印済みの hook が担う）
 
 ## 主要コマンド
 
-- 秘密情報の検査: `node scripts/secrets-scan.mjs --staged --block`
+- 秘密情報の検査: `npx doxguard scan --staged --block --strict` （CI は `scripts/secrets-scan.dual.mjs --native-only`）
 - CLAUDE.md の構造検査: `node scripts/check-claude-md.mjs`
-- hook の有効化（clone した人向け）: `pwsh scripts/install-hooks.ps1` または `sh scripts/install-hooks.sh`
 
 ## 設計原則の索引（本文は正本にある）
 
@@ -50,7 +49,7 @@ fresh public clone でも有効な内容に保つこと。 -->
 |---|---|---|
 | カートに入れて止まる。注文確定・ログイン・便の選択を AI にさせない | `skills/fressay-netsuper-cart/SKILL.md` の「やらないこと」 | なし（実機テストで確かめる） |
 | 迷った品は当て推量で入れず、最後に候補を出す | `skills/fressay-netsuper-cart/SKILL.md` の「品名を商品に決める」 | なし |
-| 公開ファイルに個人情報（住所・氏名・電話・注文番号・担当店）を入れない | 本ファイル「AI 作業共通ルール」 | `scripts/secrets-scan.mjs`（構造パターンのみ） |
+| 公開ファイルに個人情報（住所・氏名・電話・注文番号・担当店）を入れない | 本ファイル「AI 作業共通ルール」 | doxguard strict（CI は構造パターンのみ）+ gitleaks |
 
 **新しいルールを足す前に、まずこの表に 1 行足せる形にできないかを考える。** できないもの
 （機械検査も、決まったファイルも無いもの）だけが本文を持ってよい。
@@ -72,9 +71,9 @@ path and do not silently fall back to `docs/local` when the entry is missing.
 
 書く瞬間の責務（固有名詞の一般化・fixture は合成データ等）は上記「AI 作業共通ルール」の参照先に従う。このリポジトリ固有の配線は以下:
 
-- scanner: `scripts/secrets-scan.mjs`（手動実行: `node scripts/secrets-scan.mjs --staged --block`）
-- layer 2: `.githooks/pre-commit`（`git config core.hooksPath .githooks`）/ layer 3: `.github/workflows/secrets-scan.yml`
-- env (full coverage に必要・未設定なら構造 regex のみで継続): `KB_ROOT` / `FAMILY_ROOT`。設定詳細は `scripts/secrets-scan.mjs` の冒頭コメント
+- scanner: doxguard 0.2.0（手動実行: `npx doxguard scan --staged --block --strict`）と gitleaks。旧 `scripts/secrets-scan.mjs` は撤去済み
+- layer 2: `.githooks/pre-commit`（`git config core.hooksPath .githooks`）/ layer 3: `.github/workflows/secrets-scan.yml`（doxguard strict、`doxguard.ci.json`）・`.github/workflows/gitleaks.yml`
+- CI は監視語リストを持たないため構造パターン（絶対パス・private IP・メール）のみ。監視語は作者のローカル環境で layer 2 が検査する
 
 ## 関連ドキュメント
 
